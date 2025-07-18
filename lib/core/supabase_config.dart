@@ -1,8 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseConfig {
-  static const supabaseUrl =
-      'postgresql://postgres:[YOUR-PASSWORD]@db.hdnbzsfqkjyisgmggayl.supabase.co:5432/postgres';
+  static const supabaseUrl = 'https://hdnbzsfqkjyisgmggayl.supabase.co';
   static const supabaseAnonKey =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhkbmJ6c2Zxa2p5aXNnbWdnYXlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4NDI4MTUsImV4cCI6MjA2NzQxODgxNX0.fHEnH2CaBZPgbre_kJBzy8qxhNQItVS4V9fm-ZfcjHY';
 
