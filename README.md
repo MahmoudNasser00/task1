@@ -4,7 +4,8 @@ A new Flutter project.
 
 ## Getting Started
 
-Video link: https://drive.google.com/file/d/1AWBRkZv7AhxJxFd8xRsqVrKMxAJCHpRr/view?usp=drive_link
+Video link for task 1 :https://drive.google.com/file/d/1AWBRkZv7AhxJxFd8xRsqVrKMxAJCHpRr/view?usp=drive_link
+Video link for task 2: https://drive.google.com/file/d/1oO_PZ7DyEB1BmytpW-quNT1M8hUgAjbQ/view?usp=sharing
 
 This project is a starting point for a Flutter application.
 
