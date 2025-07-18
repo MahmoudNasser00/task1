@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/constants.dart';
 import '../../core/validators.dart';
-import '../bloc/auth_bloc.dart';
-import '../bloc/auth_event.dart';
-import '../bloc/auth_state.dart';
+import '../blocs/auth_bloc.dart';
+import '../blocs/auth_event.dart';
+import '../blocs/auth_state.dart';
 import '../widgets/custom_button.dart';
+import '../widgets/custom_dialog.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/logo_text.dart';
 
@@ -23,20 +24,33 @@ class _SignupScreenState extends State<SignupScreen> {
   final nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  void _signUpAction() {
+    if (_formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(
+        SignUpEvent(
+          emailController.text,
+          passwordController.text,
+          nameController.text,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: BlocConsumer<AuthBloc, AuthState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is AuthSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Account created for ${state.user.email}!"),
-                ),
+              final confirmed = await showConfirmationDialog(
+                context,
+                "Account created for ${state.user.email}!",
               );
-              Navigator.pop(context);
+              if (confirmed) {
+                Navigator.pop(context);
+              }
             } else if (state is AuthFailure) {
               ScaffoldMessenger.of(
                 context,
@@ -44,57 +58,44 @@ class _SignupScreenState extends State<SignupScreen> {
             }
           },
           builder: (context, state) {
-            return Padding(
+            return SingleChildScrollView(
               padding: EdgeInsets.all(20.w),
               child: Form(
                 key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const LogoText(
-                        title: "Sign Up",
-                        subtitle: "Join us today!",
-                      ),
-                      SizedBox(height: 20.h),
-                      CustomTextField(
-                        label: "Name",
-                        controller: nameController,
-                        validator: (value) =>
-                            value!.isEmpty ? "Enter your name" : null,
-                      ),
-                      SizedBox(height: 20.h),
-                      CustomTextField(
-                        label: "Email",
-                        controller: emailController,
-                        validator: emailValidator,
-                      ),
-                      SizedBox(height: 20.h),
-                      CustomTextField(
-                        label: "Password",
-                        controller: passwordController,
-                        obscureText: true,
-                        validator: passwordValidator,
-                      ),
-                      SizedBox(height: 30.h),
-                      state is AuthLoading
-                          ? CircularProgressIndicator(color: primaryColor)
-                          : CustomButton(
-                              text: "Sign Up",
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  context.read<AuthBloc>().add(
-                                    SignUpEvent(
-                                      emailController.text,
-                                      passwordController.text,
-                                      nameController.text,
-                                    ),
-                                  );
-                                }
-                              },
-                            ),
-                    ],
-                  ),
+                child: Column(
+                  children: [
+                    const LogoText(
+                      title: "Sign Up",
+                      subtitle: "Join us today!",
+                    ),
+                    SizedBox(height: 20.h),
+                    CustomTextField(
+                      label: "Name",
+                      controller: nameController,
+                      validator: (value) =>
+                          value!.isEmpty ? "Enter your name" : null,
+                    ),
+                    SizedBox(height: 20.h),
+                    CustomTextField(
+                      label: "Email",
+                      controller: emailController,
+                      validator: emailValidator,
+                    ),
+                    SizedBox(height: 20.h),
+                    CustomTextField(
+                      label: "Password",
+                      controller: passwordController,
+                      obscureText: true,
+                      validator: passwordValidator,
+                    ),
+                    SizedBox(height: 30.h),
+                    state is AuthLoading
+                        ? CircularProgressIndicator(color: primaryColor)
+                        : CustomButton(
+                            text: "Sign Up",
+                            onPressed: _signUpAction,
+                          ),
+                  ],
                 ),
               ),
             );
